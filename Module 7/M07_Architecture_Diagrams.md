@@ -203,28 +203,28 @@ stateDiagram-v2
 
 ```mermaid
 flowchart TD
-    PUSH["Developer pushes code\nto feature branch"] --> SCAN["Security scan runs\nin CI/CD pipeline"]
+    PUSH["Developer pushes code<br/>to feature branch"] --> SCAN["Security scan runs<br/>in CI/CD pipeline"]
 
-    SCAN --> FINDINGS{Findings\ndetected?}
+    SCAN --> FINDINGS{Findings<br/>detected?}
 
-    FINDINGS -->|No findings| PASS["✅ Pipeline passes\nMR can be merged"]
-    FINDINGS -->|Findings detected| SEVERITY{Severity\nlevel?}
+    FINDINGS -->|No findings| PASS["✅ Pipeline passes<br/>MR can be merged"]
+    FINDINGS -->|Findings detected| SEVERITY{Severity<br/>level?}
 
-    SEVERITY -->|Info / Low| WARN["⚠️ Warning only\nFindings visible in MR\nPipeline still passes\nDeveloper informed"]
+    SEVERITY -->|Info / Low| WARN["⚠️ Warning only<br/>Findings visible in MR<br/>Pipeline still passes<br/>Developer informed"]
 
-    SEVERITY -->|Medium| MEDIUM_CHECK{Security Policy\nconfigured for medium?}
+    SEVERITY -->|Medium| MEDIUM_CHECK{Security Policy<br/>configured for medium?}
     MEDIUM_CHECK -->|No policy| WARN
     MEDIUM_CHECK -->|Policy active| GATE
 
-    SEVERITY -->|High / Critical| GATE["🔴 Gate triggered\nPipeline FAILS\nor MR requires\nsecurity team approval"]
+    SEVERITY -->|High / Critical| GATE["🔴 Gate triggered<br/>Pipeline FAILS<br/>or MR requires<br/>security team approval"]
 
-    GATE --> POLICY_CHECK{Vulnerability\nstate?}
-    POLICY_CHECK -->|Newly detected| BLOCK["❌ MR blocked\nCannot merge without:\n• Security team approval\n• OR fixing the vulnerability"]
-    POLICY_CHECK -->|Pre-existing\n(historical)| WARN
+    GATE --> POLICY_CHECK{Vulnerability<br/>state?}
+    POLICY_CHECK -->|Newly detected| BLOCK["❌ MR blocked<br/>Cannot merge without:<br/>• Security team approval<br/>• OR fixing the vulnerability"]
+    POLICY_CHECK -->|Pre-existing<br/>(historical)| WARN
 
-    WARN --> MERGE_OK["Developer can merge\nFinding tracked in\nVulnerability Dashboard"]
-    BLOCK --> FIX["Developer fixes vulnerability\nor security team approves exception"]
-    FIX --> RESCAN["Re-run pipeline\nVerify fix"]
+    WARN --> MERGE_OK["Developer can merge<br/>Finding tracked in<br/>Vulnerability Dashboard"]
+    BLOCK --> FIX["Developer fixes vulnerability<br/>or security team approves exception"]
+    FIX --> RESCAN["Re-run pipeline<br/>Verify fix"]
     RESCAN -->|Fixed| PASS
     RESCAN -->|Still present| GATE
 
