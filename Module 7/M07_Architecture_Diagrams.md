@@ -220,7 +220,7 @@ flowchart TD
 
     GATE --> POLICY_CHECK{Vulnerability<br/>state?}
     POLICY_CHECK -->|Newly detected| BLOCK["❌ MR blocked<br/>Cannot merge without:<br/>• Security team approval<br/>• OR fixing the vulnerability"]
-    POLICY_CHECK -->|Pre-existing| WARN <br/>
+    POLICY_CHECK -->|Pre-existing| WARN "<br/>"
 
     WARN --> MERGE_OK["Developer can merge<br/>Finding tracked in<br/>Vulnerability Dashboard"]
     BLOCK --> FIX["Developer fixes vulnerability<br/>or security team approves exception"]
