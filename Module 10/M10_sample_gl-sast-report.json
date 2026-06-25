@@ -1,0 +1,310 @@
+{
+  "_comment": "Sample gl-sast-report.json — GitLab SAST Report Schema",
+  "_reference": "https://gitlab.com/gitlab-org/security-products/security-report-schemas",
+  "_note": "This is a realistic sample output from a Semgrep SAST scan of the vulnerable RoboVision app.",
+
+  "version": "15.0.7",
+  "vulnerabilities": [
+    {
+      "id": "f3a9d1c2b4e5f6a7b8c9d0e1f2a3b4c5",
+      "category": "sast",
+      "name": "SQL Injection",
+      "description": "User-controlled data is used to build an SQL expression. This may allow an attacker to alter the logic of the SQL statement and extract, modify, or delete data from the database.",
+      "severity": "Critical",
+      "confidence": "High",
+      "raw_source_code_extract": "query = \"SELECT id, name, state FROM robots WHERE id = '\" + robot_id + \"'\"",
+      "scanner": {
+        "id": "semgrep",
+        "name": "Semgrep"
+      },
+      "location": {
+        "file": "app/vulnerable_endpoints.py",
+        "start_line": 38,
+        "end_line": 38,
+        "class": "None",
+        "method": "find_robot"
+      },
+      "identifiers": [
+        {
+          "type": "semgrep_id",
+          "name": "python.lang.security.audit.formatted-sql-query.formatted-sql-query",
+          "value": "python.lang.security.audit.formatted-sql-query.formatted-sql-query",
+          "url": "https://semgrep.dev/r/python.lang.security.audit.formatted-sql-query"
+        },
+        {
+          "type": "cwe",
+          "name": "CWE-89",
+          "value": "89",
+          "url": "https://cwe.mitre.org/data/definitions/89.html"
+        },
+        {
+          "type": "owasp",
+          "name": "A3:2021 - Injection",
+          "value": "A3:2021"
+        }
+      ],
+      "links": [
+        {"url": "https://owasp.org/Top10/A03_2021-Injection/"},
+        {"url": "https://cwe.mitre.org/data/definitions/89.html"}
+      ],
+      "evidence": {
+        "source": {
+          "file": "app/vulnerable_endpoints.py",
+          "start_line": 35,
+          "end_line": 40
+        },
+        "summary": "User-controlled variable 'robot_id' from request.args reaches sqlite3.execute() via string concatenation without sanitisation.",
+        "request": null,
+        "response": null,
+        "supporting_messages": []
+      }
+    },
+    {
+      "id": "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6",
+      "category": "sast",
+      "name": "SQL Injection",
+      "description": "User-controlled data is used to build an SQL expression via an f-string. This allows direct manipulation of the SQL query structure.",
+      "severity": "Critical",
+      "confidence": "High",
+      "raw_source_code_extract": "query = f\"SELECT id FROM operators WHERE username='{username}' AND password_hash='{password_hash}'\"",
+      "scanner": {
+        "id": "semgrep",
+        "name": "Semgrep"
+      },
+      "location": {
+        "file": "app/vulnerable_endpoints.py",
+        "start_line": 54,
+        "end_line": 54,
+        "class": "None",
+        "method": "operator_login"
+      },
+      "identifiers": [
+        {
+          "type": "semgrep_id",
+          "name": "python.lang.security.audit.formatted-sql-query.formatted-sql-query",
+          "value": "python.lang.security.audit.formatted-sql-query.formatted-sql-query"
+        },
+        {
+          "type": "cwe",
+          "name": "CWE-89",
+          "value": "89",
+          "url": "https://cwe.mitre.org/data/definitions/89.html"
+        }
+      ],
+      "links": [
+        {"url": "https://owasp.org/Top10/A03_2021-Injection/"}
+      ]
+    },
+    {
+      "id": "b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7",
+      "category": "sast",
+      "name": "Potentially Hardcoded Secret",
+      "description": "A hardcoded string that looks like an API key or secret credential was found. Hardcoded credentials can be extracted from source code and may provide unauthorised access.",
+      "severity": "High",
+      "confidence": "Medium",
+      "raw_source_code_extract": "ROBOT_API_KEY = \"sk-robovision-prod-xK9mN2pQ8rT4wV6y\"",
+      "scanner": {
+        "id": "semgrep",
+        "name": "Semgrep"
+      },
+      "location": {
+        "file": "app/vulnerable_endpoints.py",
+        "start_line": 15,
+        "end_line": 15,
+        "class": "None",
+        "method": "None"
+      },
+      "identifiers": [
+        {
+          "type": "semgrep_id",
+          "name": "python.lang.security.audit.hardcoded-password.hardcoded-password-string",
+          "value": "python.lang.security.audit.hardcoded-password.hardcoded-password-string"
+        },
+        {
+          "type": "cwe",
+          "name": "CWE-798",
+          "value": "798",
+          "url": "https://cwe.mitre.org/data/definitions/798.html"
+        }
+      ],
+      "links": [
+        {"url": "https://cwe.mitre.org/data/definitions/798.html"}
+      ]
+    },
+    {
+      "id": "c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8",
+      "category": "sast",
+      "name": "Subprocess with Shell=True",
+      "description": "Subprocess called with shell=True and a non-static command string. If user-controlled data reaches this call, an attacker may execute arbitrary shell commands.",
+      "severity": "High",
+      "confidence": "Medium",
+      "raw_source_code_extract": "result = subprocess.run(\n        f\"ping -c 2 {target}\",\n        shell=True,",
+      "scanner": {
+        "id": "semgrep",
+        "name": "Semgrep"
+      },
+      "location": {
+        "file": "app/vulnerable_endpoints.py",
+        "start_line": 70,
+        "end_line": 76,
+        "class": "None",
+        "method": "network_diagnostic"
+      },
+      "identifiers": [
+        {
+          "type": "semgrep_id",
+          "name": "python.lang.security.audit.subprocess-shell-true.subprocess-shell-true",
+          "value": "python.lang.security.audit.subprocess-shell-true.subprocess-shell-true"
+        },
+        {
+          "type": "cwe",
+          "name": "CWE-78",
+          "value": "78",
+          "url": "https://cwe.mitre.org/data/definitions/78.html"
+        },
+        {
+          "type": "owasp",
+          "name": "A3:2021 - Injection",
+          "value": "A3:2021"
+        }
+      ],
+      "links": [
+        {"url": "https://cwe.mitre.org/data/definitions/78.html"}
+      ]
+    },
+    {
+      "id": "d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9",
+      "category": "sast",
+      "name": "Use of MD5 Hashing Algorithm for Passwords",
+      "description": "MD5 is a broken cryptographic hash function not suitable for password storage. MD5 hashes can be cracked with GPU-accelerated brute-force attacks in seconds to minutes.",
+      "severity": "Medium",
+      "confidence": "High",
+      "raw_source_code_extract": "password_hash = hashlib.md5(password.encode()).hexdigest()",
+      "scanner": {
+        "id": "semgrep",
+        "name": "Semgrep"
+      },
+      "location": {
+        "file": "app/vulnerable_endpoints.py",
+        "start_line": 47,
+        "end_line": 47,
+        "class": "None",
+        "method": "operator_login"
+      },
+      "identifiers": [
+        {
+          "type": "semgrep_id",
+          "name": "python.lang.security.audit.insecure-hash-functions.insecure-hash-function-md5",
+          "value": "python.lang.security.audit.insecure-hash-functions.insecure-hash-function-md5"
+        },
+        {
+          "type": "cwe",
+          "name": "CWE-327",
+          "value": "327",
+          "url": "https://cwe.mitre.org/data/definitions/327.html"
+        },
+        {
+          "type": "owasp",
+          "name": "A2:2021 - Cryptographic Failures",
+          "value": "A2:2021"
+        }
+      ],
+      "links": [
+        {"url": "https://cwe.mitre.org/data/definitions/327.html"},
+        {"url": "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"}
+      ]
+    },
+    {
+      "id": "e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0",
+      "category": "sast",
+      "name": "Path Traversal",
+      "description": "User-controlled input is used to construct a file path without validation. An attacker may use directory traversal sequences (../../) to access files outside the intended directory.",
+      "severity": "Medium",
+      "confidence": "Medium",
+      "raw_source_code_extract": "log_path = os.path.join('/var/robovision/logs', log_name)",
+      "scanner": {
+        "id": "semgrep",
+        "name": "Semgrep"
+      },
+      "location": {
+        "file": "app/vulnerable_endpoints.py",
+        "start_line": 88,
+        "end_line": 88,
+        "class": "None",
+        "method": "fetch_log"
+      },
+      "identifiers": [
+        {
+          "type": "semgrep_id",
+          "name": "python.lang.security.audit.path-traversal.path-traversal-open",
+          "value": "python.lang.security.audit.path-traversal.path-traversal-open"
+        },
+        {
+          "type": "cwe",
+          "name": "CWE-22",
+          "value": "22",
+          "url": "https://cwe.mitre.org/data/definitions/22.html"
+        }
+      ],
+      "links": [
+        {"url": "https://cwe.mitre.org/data/definitions/22.html"}
+      ]
+    },
+    {
+      "id": "f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1",
+      "category": "sast",
+      "name": "Unsafe use of pickle",
+      "description": "Pickle is used to deserialize data. Unpickling data from an untrusted source can result in arbitrary code execution. Attackers can craft pickle payloads that execute system commands when deserialized.",
+      "severity": "Low",
+      "confidence": "Low",
+      "raw_source_code_extract": "state = pickle.loads(base64.b64decode(state_data))",
+      "scanner": {
+        "id": "semgrep",
+        "name": "Semgrep"
+      },
+      "location": {
+        "file": "app/vulnerable_endpoints.py",
+        "start_line": 103,
+        "end_line": 103,
+        "class": "None",
+        "method": "restore_state"
+      },
+      "identifiers": [
+        {
+          "type": "semgrep_id",
+          "name": "python.lang.security.audit.insecure-pickle.insecure-pickle",
+          "value": "python.lang.security.audit.insecure-pickle.insecure-pickle"
+        },
+        {
+          "type": "cwe",
+          "name": "CWE-502",
+          "value": "502",
+          "url": "https://cwe.mitre.org/data/definitions/502.html"
+        }
+      ],
+      "links": [
+        {"url": "https://cwe.mitre.org/data/definitions/502.html"}
+      ]
+    }
+  ],
+  "remediations": [],
+  "scan": {
+    "scanner": {
+      "id": "semgrep",
+      "name": "Semgrep",
+      "url": "https://semgrep.dev",
+      "vendor": {
+        "name": "Semgrep"
+      },
+      "version": "1.45.0"
+    },
+    "type": "sast",
+    "start_time": "2024-11-15T14:30:00",
+    "end_time": "2024-11-15T14:31:47",
+    "status": "success",
+    "analyzer": {
+      "id": "semgrep",
+      "name": "Semgrep"
+    }
+  }
+}
